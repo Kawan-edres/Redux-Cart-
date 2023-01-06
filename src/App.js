@@ -1,56 +1,36 @@
-import React from 'react';
-import logo from './logo.svg';
-import { Counter } from './features/counter/Counter';
-import './App.css';
+import React, { useEffect, useState } from "react";
+import { useSelector,useDispatch  } from "react-redux";
+import { addUser, deleteUser, updateUser } from "./app/Users";
 
 function App() {
+  const usersData = useSelector((state) => state.users.value);
+  const [name,setName]=useState("");
+  const [newName,setNewName]=useState("");
+  const dispach=useDispatch();
+  function getRandomInt(max) {
+  return Math.floor(Math.random() * max);
+}
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <Counter />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <span>
-          <span>Learn </span>
-          <a
-            className="App-link"
-            href="https://reactjs.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            React
-          </a>
-          <span>, </span>
-          <a
-            className="App-link"
-            href="https://redux.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Redux
-          </a>
-          <span>, </span>
-          <a
-            className="App-link"
-            href="https://redux-toolkit.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Redux Toolkit
-          </a>
-          ,<span> and </span>
-          <a
-            className="App-link"
-            href="https://react-redux.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            React Redux
-          </a>
-        </span>
-      </header>
+      <div>
+        <input onChange={(e)=>setName(e.target.value)} value={name} type="text" placeholder="firstName " />
+       
+        <button disabled={!name} onClick={()=>{dispach(addUser({id:getRandomInt(10),name}));setName("")}}>Add User</button>
+      </div>
+
+      <div>
+        {usersData.map((user, i) => {
+          return (
+            <div className="card" key={i}>
+              <h1> {user.id} {user.name} </h1>
+              <input onChange={(e)=>{setNewName(e.target.value)}}  type="text" name="" id="" />
+              <button onClick={()=>{dispach(updateUser({id:user.id,newName}))}}>update</button>
+              <button onClick={()=>dispach(deleteUser({id:user.id}))}>delete</button>
+            </div>
+          );
+        })}
+      </div>
     </div>
   );
 }
